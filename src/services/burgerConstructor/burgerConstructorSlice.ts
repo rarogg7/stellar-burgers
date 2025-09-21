@@ -48,7 +48,10 @@ const burgerConstructorSlice = createSlice({
         state.ingredients.splice(index + 1, 0, item);
       }
     },
-    removeIngredient: (state, action: PayloadAction<TConstructorIngredient>) => {
+    removeIngredient: (
+      state,
+      action: PayloadAction<TConstructorIngredient>
+    ) => {
       if (action.payload.type === 'bun') {
         state.bun = null;
       } else {
@@ -64,11 +67,8 @@ const burgerConstructorSlice = createSlice({
   }
 });
 
-export const {
-  burgerConstructorSelector,
-  bunSelector,
-  ingredientsSelector
-} = burgerConstructorSlice.selectors;
+export const { burgerConstructorSelector, bunSelector, ingredientsSelector } =
+  burgerConstructorSlice.selectors;
 
 export const {
   addIngredient,

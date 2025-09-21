@@ -2,7 +2,12 @@ import { FC, SyntheticEvent, useState, useEffect, ChangeEvent } from 'react';
 import { LoginUI } from '@ui-pages';
 import { useDispatch, useSelector } from '../../services/store';
 import { Navigate } from 'react-router-dom';
-import { clearErrors, errorSelector, isUserAuthenticatedSelector, loginUserThunk } from '../../services/user/userSlice';
+import {
+  clearErrors,
+  errorSelector,
+  isUserAuthenticatedSelector,
+  loginUserThunk
+} from '../../services/user/userSlice';
 
 export const Login: FC = () => {
   const dispatch = useDispatch();
@@ -22,7 +27,7 @@ export const Login: FC = () => {
   };
 
   if (isAuthenticated) {
-    return <Navigate to="/" replace />;
+    return <Navigate to='/' replace />;
   }
 
   return (

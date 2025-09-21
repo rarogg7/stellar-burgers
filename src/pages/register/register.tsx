@@ -1,8 +1,11 @@
 import { FC, SyntheticEvent, useState, useEffect, ChangeEvent } from 'react';
 import { RegisterUI } from '@ui-pages';
-
 import { useSelector, useDispatch } from '../../services/store';
-import { clearErrors, errorSelector, registerUserThunk } from '../../services/user/userSlice';
+import {
+  clearErrors,
+  errorSelector,
+  registerUserThunk
+} from '../../services/user/userSlice';
 
 interface IRegisterForm {
   name: string;
@@ -24,11 +27,6 @@ export const Register: FC = () => {
     dispatch(clearErrors());
   }, [dispatch]);
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormValue((prev) => ({ ...prev, [name]: value }));
-  };
-
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
     dispatch(registerUserThunk(formValue));
@@ -40,11 +38,25 @@ export const Register: FC = () => {
       userName={formValue.name}
       email={formValue.email}
       password={formValue.password}
-      setUserName={(value: string) => setFormValue((prev) => ({ ...prev, name: value }))}
-      setEmail={(value: string) => setFormValue((prev) => ({ ...prev, email: value }))}
-      setPassword={(value: string) => setFormValue((prev) => ({ ...prev, password: value }))}
+      setUserName={(value) =>
+        setFormValue((prev) => ({
+          ...prev,
+          name: typeof value === 'function' ? value(prev.name) : value
+        }))
+      }
+      setEmail={(value) =>
+        setFormValue((prev) => ({
+          ...prev,
+          email: typeof value === 'function' ? value(prev.email) : value
+        }))
+      }
+      setPassword={(value) =>
+        setFormValue((prev) => ({
+          ...prev,
+          password: typeof value === 'function' ? value(prev.password) : value
+        }))
+      }
       handleSubmit={handleSubmit}
-      handleInputChange={handleInputChange}
     />
   );
 };

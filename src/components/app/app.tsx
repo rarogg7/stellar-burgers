@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from '../../services/store';
-import { getIngredientsThunk } from 'src/services/ingredients/ingredientsSlice';
-import { getUserThunk } from 'src/services/user/userSlice';
+import { getIngredientsThunk } from '../../services/ingredients/ingredientsSlice';
+import { getUserThunk } from '../../services/user/userSlice';
 import '../../index.css';
 import styles from './app.module.css';
 
@@ -39,14 +39,18 @@ const App = () => {
 
   const modalRoutes = [
     { path: '/feed/:number', title: '', element: <OrderInfo /> },
-    { path: '/ingredients/:id', title: 'Детали ингредиента', element: <IngredientDetails /> },
+    {
+      path: '/ingredients/:id',
+      title: 'Детали ингредиента',
+      element: <IngredientDetails />
+    },
     { path: '/profile/orders/:number', title: '', element: <OrderInfo /> }
   ];
 
   return (
     <div className={styles.app}>
       <AppHeader />
-      
+
       <Routes location={background || location}>
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />

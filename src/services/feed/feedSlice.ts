@@ -1,11 +1,12 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getFeedsApi, getOrderByNumberApi } from '../../utils/burger-api';
 import { TOrder } from '../../utils/types';
 
-export const getFeedsThunk = createAsyncThunk<
-  { orders: TOrder[]; total: number; totalToday: number }
->('feeds/getFeeds', async () => getFeedsApi());
+export const getFeedsThunk = createAsyncThunk<{
+  orders: TOrder[];
+  total: number;
+  totalToday: number;
+}>('feeds/getFeeds', async () => getFeedsApi());
 
 export const getOrderByNumberThunk = createAsyncThunk<
   { orders: TOrder[] },
@@ -32,29 +33,24 @@ const initialState: FeedState = {
   error: null
 };
 
-const setLoading = (state: FeedState, key: keyof FeedState) => {
-  state[key] = true as any;
+type LoadingKeys = 'isFeedsLoading' | 'isOrderLoading';
+
+const setLoading = (state: FeedState, key: LoadingKeys) => {
+  state[key] = true;
 };
 
-const setError = (state: FeedState, key: keyof FeedState, action: any) => {
-  state.error = action.error.message ?? 'Unknown error';
-  state[key] = false as any;
+const setError = (state: FeedState, key: LoadingKeys, action: any) => {
+  state.error = action.error?.message ?? 'Unknown error';
+  state[key] = false;
 };
 
 const feedSlice = createSlice({
   name: 'feed',
   initialState,
-  selectors: {
-    ordersSelector: (state) => state.orders,
-    isFeedsLoadingSelector: (state) => state.isFeedsLoading,
-    orderSelector: (state) => state.order ?? null,
-    isOrderLoadingSelector: (state) => state.isOrderLoading,
-    totalSelector: (state) => state.total,
-    totalTodaySelector: (state) => state.totalToday
-  },
   reducers: {},
   extraReducers: (builder) => {
     builder
+
       .addCase(getFeedsThunk.pending, (state) => {
         setLoading(state, 'isFeedsLoading');
       })
@@ -66,9 +62,8 @@ const feedSlice = createSlice({
         state.orders = action.payload.orders;
         state.total = action.payload.total;
         state.totalToday = action.payload.totalToday;
-      });
+      })
 
-    builder
       .addCase(getOrderByNumberThunk.pending, (state) => {
         setLoading(state, 'isOrderLoading');
       })
@@ -82,13 +77,14 @@ const feedSlice = createSlice({
   }
 });
 
-export const {
-  ordersSelector,
-  isFeedsLoadingSelector,
-  orderSelector,
-  isOrderLoadingSelector,
-  totalSelector,
-  totalTodaySelector
-} = feedSlice.selectors;
+export const ordersSelector = (state: { feed: FeedState }) => state.feed.orders;
+export const isFeedsLoadingSelector = (state: { feed: FeedState }) =>
+  state.feed.isFeedsLoading;
+export const orderSelector = (state: { feed: FeedState }) => state.feed.order;
+export const isOrderLoadingSelector = (state: { feed: FeedState }) =>
+  state.feed.isOrderLoading;
+export const totalSelector = (state: { feed: FeedState }) => state.feed.total;
+export const totalTodaySelector = (state: { feed: FeedState }) =>
+  state.feed.totalToday;
 
 export default feedSlice.reducer;

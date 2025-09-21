@@ -23,11 +23,14 @@ export const loginUserThunk = createAsyncThunk<TUser, TLoginData>(
   }
 );
 
-export const logoutUserThunk = createAsyncThunk('users/logoutUser', async () => {
-  await logoutApi();
-  deleteCookie('accessToken');
-  localStorage.removeItem('refreshToken');
-});
+export const logoutUserThunk = createAsyncThunk(
+  'users/logoutUser',
+  async () => {
+    await logoutApi();
+    deleteCookie('accessToken');
+    localStorage.removeItem('refreshToken');
+  }
+);
 
 export const getUserThunk = createAsyncThunk<{ user: TUser }>(
   'users/getUser',
@@ -44,10 +47,10 @@ export const registerUserThunk = createAsyncThunk<TUser, TRegisterData>(
   }
 );
 
-export const updateUserThunk = createAsyncThunk<{ user: TUser }, Partial<TRegisterData>>(
-  'users/updateUser',
-  async (data) => updateUserApi(data)
-);
+export const updateUserThunk = createAsyncThunk<
+  { user: TUser },
+  Partial<TRegisterData>
+>('users/updateUser', async (data) => updateUserApi(data));
 
 export const getOrdersThunk = createAsyncThunk<TOrder[]>(
   'users/getUserOrders',
@@ -115,12 +118,11 @@ const userSlice = createSlice({
         state.isUserAuthenticated = true;
       });
 
-    builder
-      .addCase(logoutUserThunk.fulfilled, (state) => {
-        state.user = null;
-        state.isLoginUserRequest = false;
-        state.isUserAuthenticated = false;
-      });
+    builder.addCase(logoutUserThunk.fulfilled, (state) => {
+      state.user = null;
+      state.isLoginUserRequest = false;
+      state.isUserAuthenticated = false;
+    });
 
     builder
       .addCase(getUserThunk.pending, (state) => {

@@ -1,7 +1,12 @@
 import { FC, useEffect, useState, SyntheticEvent, ChangeEvent } from 'react';
 import { ProfileUI } from '@ui-pages';
 
-import { clearErrors, errorSelector, updateUserThunk, userSelector } from '../../services/user/userSlice';
+import {
+  clearErrors,
+  errorSelector,
+  updateUserThunk,
+  userSelector
+} from '../../services/user/userSlice';
 import { useDispatch, useSelector } from '../../services/store';
 
 interface IFormValue {
