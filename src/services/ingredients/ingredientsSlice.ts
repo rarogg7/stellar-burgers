@@ -1,0 +1,50 @@
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { TIngredient } from '@utils-types';
+import { getIngredientsApi } from '../../utils/burger-api';
+
+export interface IngredientsState {
+  ingredients: TIngredient[];
+  isIngredientsLoading: boolean;
+  error: string | null;
+}
+
+const initialState: IngredientsState = {
+  ingredients: [],
+  isIngredientsLoading: false,
+  error: null
+};
+
+export const getIngredientsThunk = createAsyncThunk<TIngredient[], void>(
+  'ingredients/getIngredients',
+  getIngredientsApi
+);
+
+const ingredientsSlice = createSlice({
+  name: 'ingredients',
+  initialState,
+  selectors: {
+    ingredientsSelector: (state) => state.ingredients,
+    isIngredientsLoadingSelector: (state) => state.isIngredientsLoading,
+    errorSelector: (state) => state.error
+  },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(getIngredientsThunk.pending, (state) => {
+        state.isIngredientsLoading = true;
+        state.error = null;
+      })
+      .addCase(getIngredientsThunk.rejected, (state, action) => {
+        state.isIngredientsLoading = false;
+        state.error = action.error.message ?? 'Unknown error';
+      })
+      .addCase(getIngredientsThunk.fulfilled, (state, action) => {
+        state.isIngredientsLoading = false;
+        state.ingredients = action.payload;
+      });
+  }
+});
+
+export const { ingredientsSelector, isIngredientsLoadingSelector } =
+  ingredientsSlice.selectors;
+export default ingredientsSlice.reducer;

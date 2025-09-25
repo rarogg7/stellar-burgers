@@ -1,22 +1,34 @@
+import { FC, useEffect, useState, SyntheticEvent, ChangeEvent } from 'react';
 import { ProfileUI } from '@ui-pages';
-import { FC, SyntheticEvent, useEffect, useState } from 'react';
+
+import {
+  clearErrors,
+  errorSelector,
+  updateUserThunk,
+  userSelector
+} from '../../services/user/userSlice';
+import { useDispatch, useSelector } from '../../services/store';
+
+interface IFormValue {
+  name: string;
+  email: string;
+  password: string;
+}
 
 export const Profile: FC = () => {
-  /** TODO: взять переменную из стора */
-  const user = {
-    name: '',
-    email: ''
-  };
+  const dispatch = useDispatch();
+  const user = useSelector(userSelector);
+  const error = useSelector(errorSelector);
 
-  const [formValue, setFormValue] = useState({
-    name: user.name,
-    email: user.email,
+  const [formValue, setFormValue] = useState<IFormValue>({
+    name: user?.name || '',
+    email: user?.email || '',
     password: ''
   });
 
   useEffect(() => {
-    setFormValue((prevState) => ({
-      ...prevState,
+    setFormValue((prev) => ({
+      ...prev,
       name: user?.name || '',
       email: user?.email || ''
     }));
@@ -29,22 +41,22 @@ export const Profile: FC = () => {
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
+    dispatch(updateUserThunk(formValue));
   };
 
   const handleCancel = (e: SyntheticEvent) => {
     e.preventDefault();
     setFormValue({
-      name: user.name,
-      email: user.email,
+      name: user?.name || '',
+      email: user?.email || '',
       password: ''
     });
+    dispatch(clearErrors());
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormValue((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value
-    }));
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormValue((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
@@ -54,8 +66,7 @@ export const Profile: FC = () => {
       handleCancel={handleCancel}
       handleSubmit={handleSubmit}
       handleInputChange={handleInputChange}
+      updateUserError={error || ''}
     />
   );
-
-  return null;
 };
