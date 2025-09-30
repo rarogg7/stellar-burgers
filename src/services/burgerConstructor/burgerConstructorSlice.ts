@@ -7,7 +7,7 @@ export interface burgerConstructorState {
   error: string | null;
 }
 
-const initialState: burgerConstructorState = {
+export const initialState: burgerConstructorState = {
   bun: null,
   ingredients: [],
   error: null
@@ -79,3 +79,4 @@ export const {
 } = burgerConstructorSlice.actions;
 
 export default burgerConstructorSlice.reducer;
+export const burgerConstructorReducer = burgerConstructorSlice.reducer;

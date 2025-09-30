@@ -1,24 +1,22 @@
 import React, { FC } from 'react';
-import { NavLink } from 'react-router-dom';
-import { TAppHeaderUIProps } from './type';
-import clsx from 'clsx';
 import styles from './app-header.module.css';
-
+import { TAppHeaderUIProps } from './type';
 import {
   BurgerIcon,
   ListIcon,
   Logo,
   ProfileIcon
 } from '@zlden/react-developer-burger-ui-components';
+import { NavLink } from 'react-router-dom';
 
 export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => (
   <header className={styles.header}>
     <nav className={`${styles.menu} p-4`}>
       <div className={styles.menu_part_left}>
         <NavLink
-          to='/'
+          to={'/'}
           className={({ isActive }) =>
-            clsx(styles.link, isActive && styles.link_active)
+            `${styles.link} ${isActive ? styles.link_active : ''}`
           }
         >
           {({ isActive }) => (
@@ -31,9 +29,9 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => (
           )}
         </NavLink>
         <NavLink
-          to='/feed'
+          to={'/feed'}
           className={({ isActive }) =>
-            clsx(styles.link, isActive && styles.link_active)
+            `${styles.link} ${isActive ? styles.link_active : ''}`
           }
         >
           {({ isActive }) => (
@@ -44,16 +42,14 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => (
           )}
         </NavLink>
       </div>
-      <NavLink to='/'>
-        <div className={styles.logo}>
-          <Logo className='' />
-        </div>
-      </NavLink>
+      <div className={styles.logo}>
+        <Logo className='' />
+      </div>
       <div className={styles.link_position_last}>
         <NavLink
-          to='/profile'
+          to={'/profile'}
           className={({ isActive }) =>
-            clsx(styles.link, isActive && styles.link_active)
+            `${styles.link} ${isActive ? styles.link_active : ''}`
           }
         >
           {({ isActive }) => (
