@@ -9,7 +9,7 @@ const SELECTORS = {
   modal: '[data-cy="modal"]',
   modalClose: '[data-cy="modal-close"]',
   modalOverlay: '[data-cy="modal-overlay"]',
-  orderButton: '[data-cy="onOrderClick"]',
+  orderButton: '[data-cy="orderButton"]',
   orderNumber: '[data-cy="order-number"]',
   constructorTop: '[data-cy="top"]',
   constructorMid: '[data-cy="mid"]',
@@ -21,11 +21,11 @@ const setupPage = () => {
   cy.viewport(1280, 1024);
 
   // Моки API
-  cy.intercept('GET', '/api/ingredients', { fixture: 'ingredients.json' }).as(
+  cy.intercept('GET', 'https://norma.nomoreparties.space/api/ingredients', { fixture: 'ingredients.json' }).as(
     'getIngredients'
   );
-  cy.intercept('GET', '/api/auth/user', { fixture: 'user.json' }).as('getAuth');
-  cy.intercept('POST', '/api/orders', { fixture: 'order.json' }).as(
+  cy.intercept('GET', 'https://norma.nomoreparties.space/api/auth/user', { fixture: 'user.json' }).as('getAuth');
+  cy.intercept('POST', 'https://norma.nomoreparties.space/api/orders', { fixture: 'order.json' }).as(
     'createOrder'
   );
 
