@@ -1,9 +1,5 @@
 import { TOrder } from '@utils-types';
-import reducer, {
-  OrderState,
-  clearOrder,
-  orderBurgerThunk
-} from './orderSlice';
+import reducer, { initialState, clearOrder, orderBurgerThunk } from './orderSlice';
 
 const mockOrder: TOrder = {
   _id: 'testOrderIdNew',
@@ -21,74 +17,29 @@ const mockOrder: TOrder = {
 
 describe('Order Slice - синхронные экшены', () => {
   test('Очистка заказа', () => {
-    const initialState: OrderState = {
-      order: mockOrder,
-      isOrderLoading: false,
-      error: null
-    };
-
-    const newState = reducer(initialState, clearOrder());
-
-    expect(newState).toEqual({
-      order: null,
-      isOrderLoading: false,
-      error: null
-    });
+    const stateWithOrder = { ...initialState, order: mockOrder };
+    const newState = reducer(stateWithOrder, clearOrder());
+    expect(newState).toEqual(initialState);
   });
 });
 
 describe('Order Slice - асинхронные экшены', () => {
   test('Проверка pending', () => {
-    const initialState: OrderState = {
-      order: null,
-      isOrderLoading: false,
-      error: null
-    };
-
-    const newState = reducer(
-      initialState,
-      orderBurgerThunk.pending('pending', mockOrder.ingredients)
-    );
-
+    const newState = reducer(initialState, orderBurgerThunk.pending('pending', mockOrder.ingredients));
     expect(newState.isOrderLoading).toBeTruthy();
     expect(newState.error).toBeNull();
   });
 
   test('Проверка rejected', () => {
-    const initialState: OrderState = {
-      order: null,
-      isOrderLoading: false,
-      error: null
-    };
-
-    const error: Error = {
-      name: 'rejected',
-      message: 'Ошибка при создании заказа'
-    };
-
-    const newState = reducer(
-      initialState,
-      orderBurgerThunk.rejected(error, 'rejected', mockOrder.ingredients)
-    );
-
+    const error: Error = { name: 'rejected', message: 'Ошибка при создании заказа' };
+    const newState = reducer(initialState, orderBurgerThunk.rejected(error, 'rejected', mockOrder.ingredients));
     expect(newState.isOrderLoading).toBeFalsy();
     expect(newState.error).toBe(error.message);
   });
 
   test('Проверка fulfilled', () => {
-    const initialState: OrderState = {
-      order: null,
-      isOrderLoading: false,
-      error: null
-    };
-
     const payload = { order: mockOrder };
-
-    const newState = reducer(
-      initialState,
-      orderBurgerThunk.fulfilled(payload, 'fulfilled', mockOrder.ingredients)
-    );
-
+    const newState = reducer(initialState, orderBurgerThunk.fulfilled(payload, 'fulfilled', mockOrder.ingredients));
     expect(newState.isOrderLoading).toBeFalsy();
     expect(newState.error).toBeNull();
     expect(newState.order).toEqual(mockOrder);

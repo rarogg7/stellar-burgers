@@ -1,39 +1,16 @@
 import feedReducer, { getFeedsThunk, FeedState } from './feedSlice';
 import { TOrder } from '../../utils/types';
+import { initialState } from './feedSlice';
 
 describe('Тесты асинхронных экшенов feedSlice', () => {
   describe('Тестируем getFeedsThunk', () => {
     test('pending: установка isFeedsLoading в true и очистка ошибки', () => {
-      const initialState: FeedState = {
-        orders: [],
-        isFeedsLoading: false,
-        order: null,
-        isOrderLoading: false,
-        total: 0,
-        totalToday: 0,
-        error: null
-      };
-
-      const newState = feedReducer(
-        initialState,
-        getFeedsThunk.pending('pending')
-      );
-
+      const newState = feedReducer(initialState, getFeedsThunk.pending('pending'));
       expect(newState.isFeedsLoading).toBe(true);
       expect(newState.error).toBeNull();
     });
 
     test('fulfilled: успешная загрузка заказов', () => {
-      const initialState: FeedState = {
-        orders: [],
-        isFeedsLoading: false,
-        order: null,
-        isOrderLoading: false,
-        total: 0,
-        totalToday: 0,
-        error: null
-      };
-
       const mockOrders: TOrder[] = [
         {
           _id: 'testid1',
@@ -55,16 +32,8 @@ describe('Тесты асинхронных экшенов feedSlice', () => {
         }
       ];
 
-      const payload = {
-        orders: mockOrders,
-        total: 5,
-        totalToday: 2
-      };
-
-      const newState = feedReducer(
-        initialState,
-        getFeedsThunk.fulfilled(payload, 'fulfilled')
-      );
+      const payload = { orders: mockOrders, total: 5, totalToday: 2 };
+      const newState = feedReducer(initialState, getFeedsThunk.fulfilled(payload, 'fulfilled'));
 
       expect(newState.isFeedsLoading).toBe(false);
       expect(newState.error).toBeNull();
@@ -74,16 +43,6 @@ describe('Тесты асинхронных экшенов feedSlice', () => {
     });
 
     test('rejected: установка ошибки и выключение загрузки', () => {
-      const initialState: FeedState = {
-        orders: [],
-        isFeedsLoading: true,
-        order: null,
-        isOrderLoading: false,
-        total: 0,
-        totalToday: 0,
-        error: null
-      };
-
       const action = {
         type: getFeedsThunk.rejected.type,
         error: { message: 'Ошибка' }

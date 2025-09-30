@@ -1,43 +1,26 @@
-import reducer, {
-  IngredientsState,
-  getIngredientsThunk
-} from './ingredientsSlice';
+import reducer, { initialState, getIngredientsThunk } from './ingredientsSlice';
 import { TIngredient } from '@utils-types';
 
-describe('Тесты асинхронных экшенов', () => {
-  describe('Тестируем getIngredientsThunk', () => {
-    const initialState: IngredientsState = {
-      ingredients: [],
-      isIngredientsLoading: false,
-      error: null
-    };
-
-    test('Тестируем отправку запроса (pending)', () => {
-      const newState = reducer(
-        initialState,
-        getIngredientsThunk.pending('pending')
-      );
-
+describe('Тесты асинхронных экшенов ingredientsSlice', () => {
+  describe('getIngredientsThunk', () => {
+    test('pending: установка isIngredientsLoading в true и очистка ошибки', () => {
+      const newState = reducer(initialState, getIngredientsThunk.pending('pending'));
       expect(newState.isIngredientsLoading).toBeTruthy();
       expect(newState.error).toBeNull();
     });
 
-    test('Тестируем ошибку при запросе (rejected)', () => {
+    test('rejected: установка ошибки и выключение загрузки', () => {
       const error: Error = {
         name: 'rejected',
         message: 'Ошибка при получении ингредиентов'
       };
 
-      const newState = reducer(
-        initialState,
-        getIngredientsThunk.rejected(error, 'rejected')
-      );
-
+      const newState = reducer(initialState, getIngredientsThunk.rejected(error, 'rejected'));
       expect(newState.isIngredientsLoading).toBeFalsy();
       expect(newState.error).toBe(error.message);
     });
 
-    test('Тестируем успешный запрос (fulfilled)', () => {
+    test('fulfilled: успешная загрузка ингредиентов', () => {
       const mockIngredients: TIngredient[] = [
         {
           _id: '1',
@@ -80,11 +63,7 @@ describe('Тесты асинхронных экшенов', () => {
         }
       ];
 
-      const newState = reducer(
-        initialState,
-        getIngredientsThunk.fulfilled(mockIngredients, 'fulfilled')
-      );
-
+      const newState = reducer(initialState, getIngredientsThunk.fulfilled(mockIngredients, 'fulfilled'));
       expect(newState.isIngredientsLoading).toBeFalsy();
       expect(newState.error).toBeNull();
       expect(newState.ingredients).toEqual(mockIngredients);

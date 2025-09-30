@@ -1,26 +1,20 @@
-import { combineReducers } from '@reduxjs/toolkit';
-import burgerConstructorReducer from './burgerConstructor/burgerConstructorSlice';
-import ingredientsReducer from './ingredients/ingredientsSlice';
-import feedReducer from './feed/feedSlice';
-import orderReducer from './order/orderSlice';
-import userReducer from './user/userSlice';
 import { rootReducer } from './rootReducer';
-
-const expectedRootReducer = combineReducers({
-  burgerConstructor: burgerConstructorReducer,
-  ingredients: ingredientsReducer,
-  feed: feedReducer,
-  order: orderReducer,
-  user: userReducer
-});
+import { initialState as burgerInitialState } from './burgerConstructor/burgerConstructorSlice';
+import { initialState as ingredientsInitialState } from './ingredients/ingredientsSlice';
+import { initialState as feedInitialState } from './feed/feedSlice';
+import { initialState as orderInitialState } from './order/orderSlice';
+import { initialState as userInitialState } from './user/userSlice';
 
 describe('rootReducer', () => {
   test('Должен вернуть начальное состояние при неизвестном action', () => {
-    const UNKNOWN_ACTION = { type: 'UNKNOWN_ACTION' };
-    const APP_INIT = { type: 'APP_INIT' };
-    
-    const initialState = expectedRootReducer(undefined, UNKNOWN_ACTION);
-    
-    expect(rootReducer(undefined, APP_INIT)).toEqual(initialState);
+    const state = rootReducer(undefined, { type: 'UNKNOWN_ACTION' });
+
+    expect(state).toEqual({
+      burgerConstructor: burgerInitialState,
+      ingredients: ingredientsInitialState,
+      feed: feedInitialState,
+      order: orderInitialState,
+      user: userInitialState
+    });
   });
 });
